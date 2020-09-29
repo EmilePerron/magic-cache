@@ -1,0 +1,21 @@
+{
+    "name": "emileperron/magic-cache",
+    "description": "An easy to use caching library that uses Symfony's FilesystemAdapter under the hood.",
+    "type": "library",
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/cache": "^5.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Émile Perron",
+            "email": "contact@emileperron.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Emileperron\\MagicCache\\": "src/"
+        }
+    }
+}
