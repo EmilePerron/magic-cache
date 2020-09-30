@@ -6,10 +6,10 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 abstract class Cache
 {
-	public static function magicGet($suffixes = [], $default = null)
+	public static function magicGet($suffixes = [], $fallback = null)
     {
 		$key = static::magicKey($suffixes);
-		return static::get($key, $default);
+		return static::get($key, $fallback);
 	}
 
 	public static function magicSet($value, $expiresAfter = 0, $suffixes = [])
@@ -22,14 +22,14 @@ abstract class Cache
     {
 		$origin = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3)[2];
 		$suffixes = $suffixes ?: $origin['args'];
-		$suffix = implode('.', $suffixes);
-		$key = $origin['class'] . '.' . $origin['function'] . ($suffix ? '.' . $suffix : '');
+		$suffix = md5(serialize($suffixes));
+		$key = $origin['class'] . '.' . $origin['function'] . '.' . $suffix;
 		$key = strtolower(str_replace('\\', '.', $key));
 
 		return $key;
 	}
 
-	public static function get($key, $default = null)
+	public static function get($key, $fallback = null)
     {
 		$cache = static::getCache($key);
 
@@ -37,7 +37,11 @@ abstract class Cache
 			return $cache->get();
 		}
 
-		return $default;
+		if (is_callable($fallback)) {
+			return call_user_func($fallback);
+		}
+
+		return $fallback;
 	}
 
 	public static function set($key, $value, $expiresAfter = 0)
