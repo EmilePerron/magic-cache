@@ -28,9 +28,15 @@ Cache::set('my_cache_key_2', 'my second value', 3600);
 Cache::set('my_cache_key_3', ['obj' => 'value']);
 
 // Getting data from cache
-// Definition: get($key, $default = null)
+// Definition: get($key, $fallback = null)
 Cache::get('my_cache_key');
-Cache::get('my_non_existing_key', 'default/fallback value');
+Cache::get('my_non_existing_key', 'fallback value');
+// The $fallback parameter also allows for callables
+Cache::get('my_non_existing_key', 'MyClass::myCallbackMethod');
+Cache::get('my_non_existing_key', ['MyClass', 'myCallbackMethod']);
+Cache::get('my_non_existing_key', function(){
+	return 'fallback value';
+});
 
 // Manually removing data from cache
 // Definition: remove($key)
@@ -45,17 +51,14 @@ Cache::prune();
 // Here's an example:
 function getRecordFromDatabase($id)
 {
-	if ($cachedValue = Cache::magicGet()) {
-		return $cachedValue;
-	}
-
-	$value = fetchValueFromDatabase($id); // replace this with your own data fetching/processing code
-
-	return Cache::magicSet($value);
+	return Cache::magicGet([], function() use ($id) {
+		$value = fetchValueFromDatabase($id); // replace this with your own data fetching/processing code
+		return Cache::magicSet($value);
+	});
 }
 
 // The definition of both methods goes as follows:
-// magicGet($suffixes = [], $default = null)
+// magicGet($fallback = null, $suffixes = [])
 // magicSet($value, $expiresAfter = 0, $suffixes = [])
 ```
 
