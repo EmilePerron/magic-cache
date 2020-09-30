@@ -6,7 +6,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 abstract class Cache
 {
-	public static function magicGet($suffixes = [], $fallback = null)
+	public static function magicGet($fallback = null, $suffixes = [])
     {
 		$key = static::magicKey($suffixes);
 		return static::get($key, $fallback);
