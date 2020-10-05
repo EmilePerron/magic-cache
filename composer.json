@@ -3,8 +3,8 @@
     "description": "An easy to use caching library that uses Symfony's FilesystemAdapter under the hood.",
     "type": "library",
     "require": {
-        "php": ">=5.4.0",
-        "symfony/cache": "^5.1"
+        "php": ">=5.6.0",
+        "symfony/cache": "^3.4"
     },
     "license": "MIT",
     "authors": [
