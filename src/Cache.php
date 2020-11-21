@@ -60,8 +60,7 @@ abstract class Cache
 
 	public static function remove($key)
 	{
-		$key = static::getCacheKey($key);
-		return static::getCache($key)->delete($key);
+		return static::getFilesystemCache()->delete($key);
 	}
 
 	public static function prune()
